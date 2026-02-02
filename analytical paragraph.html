@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytical Paragraph Structure - Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #006064 0%, #00838f 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .slides-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .slide {
+            display: none;
+            padding: 50px;
+            min-height: 600px;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        .slide-header {
+            background: linear-gradient(to right, #006064, #00838f);
+            color: white;
+            padding: 25px 50px;
+            border-bottom: 5px solid #ffab00;
+            margin: -50px -50px 40px -50px;
+        }
+        
+        .slide-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .slide-header h1 i {
+            color: #ffab00;
+        }
+        
+        .slide-number {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: #ffab00;
+            color: #006064;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .content {
+            line-height: 1.8;
+            font-size: 18px;
+        }
+        
+        h2 {
+            color: #006064;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffab00;
+        }
+        
+        h3 {
+            color: #00838f;
+            margin: 25px 0 15px 0;
+        }
+        
+        .highlight {
+            background: #e0f7fa;
+            padding: 20px;
+            border-left: 5px solid #006064;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .analytical-badge {
+            display: inline-block;
+            background: #006064;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 25px 50px;
+            background: #f5f5f5;
+            border-top: 2px solid #ddd;
+        }
+        
+        button {
+            padding: 12px 30px;
+            background: #00838f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        button:hover {
+            background: #006064;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:disabled {
+            background: #b0bec5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 50px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #ffab00, #ff8f00);
+            width: 0%;
+            transition: width 0.5s;
+            border-radius: 4px;
+        }
+        
+        .key-point {
+            background: #fffde7;
+            border: 1px solid #ffd600;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .key-point i {
+            color: #ff8f00;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+        
+        .structure-diagram {
+            background: #e0f7fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+        
+        .component {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        
+        .component:hover {
+            transform: translateX(10px);
+        }
+        
+        .component-number {
+            background: #00838f;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .component-label {
+            font-weight: bold;
+            color: #006064;
+            min-width: 180px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .comparison-table th {
+            background: #00838f;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        
+        .comparison-table tr:hover {
+            background: #e0f2f1;
+        }
+        
+        .example-box {
+            background: #f1f8e9;
+            border-left: 5px solid #7cb342;
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+        }
+        
+        .step-indicator {
+            display: inline-block;
+            background: #00838f;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .color-code {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            gap: 10px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .tetea-box {
+            border: 2px dashed #00838f;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            background: #f8fdff;
+        }
+        
+        .tetea-acronym {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .tetea-letter {
+            background: #e0f7fa;
+            padding: 15px;
+            border-radius: 10px;
+            width: 18%;
+            font-weight: bold;
+            color: #006064;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tetea-letter span {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="slides-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <!-- Slide 1 -->
+        <div class="slide active" id="slide1">
+            <div class="slide-header">
+                <h1><i class="fas fa-cube"></i> Analytical Paragraph Structure - The Complete Guide</h1>
+            </div>
+            <div class="slide-number">1</div>
+            <div class="content">
+                <div class="highlight">
+                    <h2><span class="analytical-badge">ANALYTICAL PARAGRAPH</span> The Building Block of Excellence</h2>
+                    <p>An analytical paragraph is a <strong>self-contained unit of argument</strong> that develops one specific point through evidence, technique explanation, and deep analysis. It's the fundamental unit of high-scoring CSS/PMS essays.</p>
+                </div>
+                
+                <h2>Why Master This Structure?</h2>
+                <p>In competitive exams, <strong>structure determines score</strong>. A well-structured analytical paragraph demonstrates:</p>
+                
+                <div class="structure-diagram">
+                    <div class="component">
+                        <div class="component-number">1</div>
+                        <div>
+                            <div class="component-label">Logical Rigor</div>
+                            <div>Clear progression from claim to conclusion</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">2</div>
+                        <div>
+                            <div class="component-label">Critical Thinking</div>
+                            <div>Ability to analyze, not just describe</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">3</div>
+                        <div>
+                            <div class="component-label">Disciplinary Knowledge</div>
+                            <div>Understanding of concepts and techniques</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">4</div>
+                        <div>
+                            <div class="component-label">Persuasive Power</div>
+                            <div>Ability to convince through structured argument</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>The TETEA Model</h3>
+                <div class="tetea-acronym">
+                    <div class="tetea-letter">
+                        <span>T</span>
+                        Topic Sentence
+                    </div>
+                    <div class="tetea-letter">
+                        <span>E</span>
+                        Evidence
+                    </div>
+                    <div class="tetea-letter">
+                        <span>T</span>
+                        Technique
+                    </div>
+                    <div class="tetea-letter">
+                        <span>E</span>
+                        Explanation
+                    </div>
+                    <div class="tetea-letter">
+                        <span>A</span>
+                        Anchor/Link
+                    </div>
+                </div>
+                
+                <div class="key-point">
+                    <i class="fas fa-lightbulb"></i>
+                    <div>
+                        <strong>Core Insight:</strong> Every analytical paragraph should feel like a <strong>mini-essay</strong> with its own introduction (Topic), body (Evidence+Technique+Explanation), and conclusion (Anchor).
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 2 -->
+        <div class="slide" id="slide2">
+            <div class="slide-header">
+                <h1><i class="fas fa-sitemap"></i> TETEA Structure Explained</h1>
+            </div>
+            <div class="slide-number">2</div>
+            <div class="content">
+                <h2>Breaking Down Each Component</h2>
+                
+                <div class="tetea-box">
+                    <div class="component">
+                        <div class="component-number">T</div>
+                        <div>
+                            <div class="component-label">Topic Sentence</div>
+                            <div><strong>Purpose:</strong> Presents the paragraph's main argument that supports your thesis.<br>
+                            <strong>Characteristics:</strong> Specific, debatable, and directly answers part of the essay question.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">E</div>
+                        <div>
+                            <div class="component-label">Evidence</div>
+                            <div><strong>Purpose:</strong> Provides concrete support for your topic sentence.<br>
+                            <strong>Sources:</strong> Facts, statistics, historical events, quotations, case studies.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">T</div>
+                        <div>
+                            <div class="component-label">Technique</div>
+                            <div><strong>Purpose:</strong> Identifies HOW the evidence proves your point.<br>
+                            <strong>Examples:</strong> Rhetorical device, statistical method, historical process, theoretical framework.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">E</div>
+                        <div>
+                            <div class="component-label">Explanation</div>
+                            <div><strong>Purpose:</strong> Explains WHY the evidence matters.<br>
+                            <strong>Focus:</strong> Implications, significance, connections to broader argument.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">A</div>
+                        <div>
+                            <div class="component-label">Anchor/Link</div>
+                            <div><strong>Purpose:</strong> Connects paragraph back to thesis and/or forward to next point.<br>
+                            <strong>Function:</strong> Creates cohesion and logical flow between paragraphs.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Visualizing the Flow</h3>
+                <div style="background: #f3e5f5; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
+                    <div style="display: inline-block; text-align: left;">
+                        <div class="color-code">
+                            <div class="color-box" style="background: #00838f;"></div>
+                            <div><strong>Topic Sentence</strong> (What you'll prove)</div>
+                        </div>
+                        <div class="color-code">
+                            <div class="color-box" style="background: #4db6ac;"></div>
+                            <div><strong>Evidence + Technique</strong> (How you'll prove it)</div>
+                        </div>
+                        <div class="color-code">
+                            <div class="color-box" style="background: #80cbc4;"></div>
+                            <div><strong>Explanation</strong> (Why it matters)</div>
+                        </div>
+                        <div class="color-code">
+                            <div class="color-box" style="background: #b2dfdb;"></div>
+                            <div><strong>Anchor/Link</strong> (How it fits the whole)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-point">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>
+                        <strong>Critical Distinction:</strong> The <strong>Technique</strong> component is what separates analytical writing from descriptive writing. It answers "By what mechanism does this evidence prove my point?"
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="slide" id="slide3">
+            <div class="slide-header">
+                <h1><i class="fas fa-file-alt"></i> Complete TETEA Example</h1>
+            </div>
+            <div class="slide-number">3</div>
+            <div class="content">
+                <h2>From Theory to Practice: A Real Example</h2>
+                <p>Let's examine a complete analytical paragraph on the topic: <em>"Democracy without strong rule of law leads to majoritarian tyranny."</em></p>
+                
+                <div class="example-box">
+                    <h3>Full Analytical Paragraph</h3>
+                    
+                    <p><span class="step-indicator">T</span> <strong>The foundational flaw in an unconstrained majoritarian democracy is its potential to legitimize the oppression of minorities through the very instrument of popular sovereignty.</strong></p>
+                    
+                    <p><span class="step-indicator">E</span> <strong>This is not a theoretical concern, as evidenced by the systematic marginalization of the Tamil minority in post-independence Sri Lanka.</strong> Despite democratic elections, Sinhala-Buddhist majoritarian policies like the 1956 'Sinhala Only Act' were enacted through parliamentary majorities, legally disenfranchising a significant portion of the citizenry.</p>
+                    
+                    <p><span class="step-indicator">T</span> <strong>Here, the technique was the use of formal democratic procedures—majority voting in a sovereign parliament—to institute a de facto ethnic hegemony.</strong> The rule of law was reduced to mere majoritarian will, devoid of protections for fundamental group rights.</p>
+                    
+                    <p><span class="step-indicator">E</span> <strong>The profound implication is that democracy thus transmutes from a system protecting individual liberty into an engine of collective identity politics.</strong> This case demonstrates that when the rule of law lacks entrenched constitutional safeguards, the 'will of the people' can become indistinguishable from the will of the dominant group, eroding the state's legitimacy and fueling civil strife.</p>
+                    
+                    <p><span class="step-indicator">A</span> <strong>Therefore, this example substantiates the claim that majoritarian tyranny is a tangible risk; it also underscores that the remedy lies not in abandoning democracy, but in reinforcing it with a liberal, rights-based constitutionalism.</strong></p>
+                </div>
+                
+                <h3>Why This Works</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Component</th>
+                        <th>How It Functions</th>
+                        <th>Effectiveness</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Topic Sentence</strong></td>
+                        <td>Makes specific, arguable claim about democracy's flaw</td>
+                        <td>✓ Clear agenda for paragraph</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Evidence</strong></td>
+                        <td>Uses concrete historical example (Sri Lanka)</td>
+                        <td>✓ Provides factual foundation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technique</strong></td>
+                        <td>Identifies "use of democratic procedures for ethnic hegemony"</td>
+                        <td>✓ Shows analytical depth</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Explanation</strong></td>
+                        <td>Explains transformation of democracy's purpose</td>
+                        <td>✓ Demonstrates critical thinking</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anchor</strong></td>
+                        <td>Links back to thesis and suggests solution</td>
+                        <td>✓ Creates cohesion and forward motion</td>
+                    </tr>
+                </table>
+                
+                <div class="key-point">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div>
+                        <strong>Examiner's Perspective:</strong> This paragraph demonstrates <strong>knowledge</strong> (Sri Lankan case), <strong>analysis</strong> (technique identification), and <strong>synthesis</strong> (connection to broader argument)—exactly what earns top marks.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4 -->
+        <div class="slide" id="slide4">
+            <div class="slide-header">
+                <h1><i class="fas fa-adjust"></i> CSS vs PMS: Paragraph Variations</h1>
+            </div>
+            <div class="slide-number">4</div>
+            <div class="content">
+                <h2>Tailoring Structure to Exam Requirements</h2>
+                <p>The TETEA model adapts based on whether you're writing for CSS or PMS exams.</p>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th>Feature</th>
+                        <th>CSS Paragraph Structure</th>
+                        <th>PMS Paragraph Structure</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Evidence Position</strong></td>
+                        <td>Position 4 (after Topic, Context, Explanation)</td>
+                        <td>Position 2 (immediately after Topic Sentence)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Length</strong></td>
+                        <td>120-150 words</td>
+                        <td>100-110 words</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Depth of Analysis</strong></td>
+                        <td>Exhaustive, with multiple layers</td>
+                        <td>Concise but complete</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technique Emphasis</strong></td>
+                        <td>Explicitly named and explained</td>
+                        <td>Often integrated with explanation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Number in Essay</strong></td>
+                        <td>18 body paragraphs + 1 crunch paragraph</td>
+                        <td>13 body paragraphs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Special Features</strong></td>
+                        <td>Includes "Crunch Paragraph" for deepest analysis</td>
+                        <td>No crunch paragraph; analysis distributed</td>
+                    </tr>
+                </table>
+                
+                <h3>CSS Paragraph Pattern (Evidence at Position 4)</h3>
+                <div style="background: #e8eaf6; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                    <ol style="margin-left: 30px;">
+                        <li><strong>Topic Sentence</strong> - Your argument</li>
+                        <li><strong>Context/Explanation</strong> - Set up the evidence</li>
+                        <li><strong>Technique Mention</strong> - Hint at the mechanism</li>
+                        <li><strong>Evidence</strong> - Concrete support</li>
+                        <li><strong>Detailed Technique Analysis</strong> - How evidence works</li>
+                        <li><strong>Implications/Explanation</strong> - Why it matters</li>
+                        <li><strong>Anchor/Link</strong> - Connection to thesis</li>
+                    </ol>
+                </div>
+                
+                <h3>PMS Paragraph Pattern (Evidence at Position 2)</h3>
+                <div style="background: #e0f2f1; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                    <ol style="margin-left: 30px;">
+                        <li><strong>Topic Sentence</strong> - Your argument</li>
+                        <li><strong>Evidence</strong> - Immediate concrete support</li>
+                        <li><strong>Technique + Explanation</strong> - Combined analysis</li>
+                        <li><strong>Analysis/Implications</strong> - Logical consequences</li>
+                        <li><strong>Anchor/Link</strong> - Connection to thesis</li>
+                    </ol>
+                </div>
+                
+                <div class="key-point">
+                    <i class="fas fa-chess-board"></i>
+                    <div>
+                        <strong>Strategic Adaptation:</strong> CSS paragraphs <strong>build toward evidence</strong> for dramatic impact. PMS paragraphs <strong>lead with evidence</strong> for immediate credibility in limited space.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 5 -->
+        <div class="slide" id="slide5">
+            <div class="slide-header">
+                <h1><i class="fas fa-tools"></i> Techniques for Analysis</h1>
+            </div>
+            <div class="slide-number">5</div>
+            <div class="content">
+                <h2>The "Technique" Component: Your Analytical Toolbox</h2>
+                <p>The Technique component is where you demonstrate disciplinary knowledge and analytical sophistication.</p>
+                
+                <div class="structure-diagram">
+                    <h3>Categories of Analytical Techniques</h3>
+                    
+                    <div class="component">
+                        <div class="component-number">1</div>
+                        <div>
+                            <div class="component-label">Political Techniques</div>
+                            <div>Majoritarianism, constitutional hardball, identity politics, realpolitik, soft power</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">2</div>
+                        <div>
+                            <div class="component-label">Economic Techniques</div>
+                            <div>Rent-seeking, regulatory capture, comparative advantage, trickle-down economics</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">3</div>
+                        <div>
+                            <div class="component-label">Social Techniques</div>
+                            <div>Othering, social stratification, hegemony, cultural capital, symbolic violence</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">4</div>
+                        <div>
+                            <div class="component-label">Rhetorical Techniques</div>
+                            <div>Framing, agenda-setting, moral equivalence, false dichotomy, loaded language</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">5</div>
+                        <div>
+                            <div class="component-label">Historical Techniques</div>
+                            <div>Historical materialism, great man theory, dialectical analysis, periodization</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>How to Identify and Explain Techniques</h3>
+                <div class="example-box">
+                    <h4>Example 1: Political Context</h4>
+                    <p><strong>Evidence:</strong> "The 18th Amendment in Pakistan concentrated power in the executive."<br>
+                    <strong>Technique Identification:</strong> "This exemplifies <em>constitutional hardball</em>—using formal constitutional procedures to achieve substantive political changes that alter the balance of power."</p>
+                    
+                    <h4 style="margin-top: 20px;">Example 2: Economic Context</h4>
+                    <p><strong>Evidence:</strong> "Privatization of state enterprises in the 1990s led to wealth concentration."<br>
+                    <strong>Technique Identification:</strong> "This demonstrates <em>rent-seeking behavior</em> where well-connected elites capture economic reforms for private gain rather than public benefit."</p>
+                </div>
+                
+                <div class="key-point">
+                    <i class="fas fa-magic"></i>
+                    <div>
+                        <strong>Pro Tip:</strong> Always use the <strong>specific terminology</strong> of the discipline. Instead of "manipulated the system," say "engaged in <em>regulatory capture</em>." This shows expertise.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 6 -->
+        <div class="slide" id="slide6">
+            <div class="slide-header">
+                <h1><i class="fas fa-check-circle"></i> Common Mistakes & Best Practices</h1>
+            </div>
+            <div class="slide-number">6</div>
+            <div class="content">
+                <h2>Avoid These Critical Errors</h2>
+                
+                <div style="background: #ffebee; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3><i class="fas fa-times-circle" style="color: #f44336;"></i> Top 5 Paragraph Mistakes</h3>
+                    
+                    <div class="component" style="background: #ffcdd2;">
+                        <div class="component-number">!</div>
+                        <div>
+                            <div class="component-label">Descriptive, Not Analytical</div>
+                            <div>Just stating facts without explaining how/why they matter.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component" style="background: #ffcdd2;">
+                        <div class="component-number">!</div>
+                        <div>
+                            <div class="component-label">Missing Technique Component</div>
+                            <div>Presenting evidence without identifying the mechanism at work.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component" style="background: #ffcdd2;">
+                        <div class="component-number">!</div>
+                        <div>
+                            <div class="component-label">Multiple Arguments in One Paragraph</div>
+                            <div>Trying to prove too much, resulting in a confused paragraph.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component" style="background: #ffcdd2;">
+                        <div class="component-number">!</div>
+                        <div>
+                            <div class="component-label">Weak or Missing Anchor</div>
+                            <div>Paragraph feels isolated, not connected to the larger argument.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component" style="background: #ffcdd2;">
+                        <div class="component-number">!</div>
+                        <div>
+                            <div class="component-label">Evidence-Only Paragraphs</div>
+                            <div>Listing examples without sufficient analysis between them.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2>Best Practices for Excellence</h2>
+                
+                <div class="structure-diagram">
+                    <h3>The Golden Rules of Analytical Paragraphs</h3>
+                    
+                    <div class="component">
+                        <div class="component-number">1</div>
+                        <div>
+                            <div class="component-label">One Idea Per Paragraph</div>
+                            <div>Each paragraph should develop exactly one clear argument.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">2</div>
+                        <div>
+                            <div class="component-label">Follow the Structure</div>
+                            <div>Always use TETEA or its CSS/PMS variations consciously.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">3</div>
+                        <div>
+                            <div class="component-label">Name Your Techniques</div>
+                            <div>Use disciplinary terminology to show expertise.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">4</div>
+                        <div>
+                            <div class="component-label">Connect Everything</div>
+                            <div>Every sentence should clearly relate to the Topic Sentence.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-number">5</div>
+                        <div>
+                            <div class="component-label">Practice with Timing</div>
+                            <div>CSS: 8-10 minutes per paragraph, PMS: 5-6 minutes.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Final Checklist for Every Paragraph</h3>
+                <div class="highlight">
+                    <ul style="margin-left: 30px;">
+                        <li>✓ Does the Topic Sentence make a specific, arguable claim?</li>
+                        <li>✓ Is evidence concrete and relevant to the claim?</li>
+                        <li>✓ Have I identified and explained the technique at work?</li>
+                        <li>✓ Does the explanation show why this matters (implications)?</li>
+                        <li>✓ Does the Anchor connect back to my thesis?</li>
+                        <li>✓ Is the paragraph self-contained but connected to the whole?</li>
+                        <li>✓ For CSS: Is evidence at position 4? For PMS: Is evidence at position 2?</li>
+                    </ul>
+                </div>
+                
+                <div class="key-point" style="background: #e8f5e9; border-color: #4caf50;">
+                    <i class="fas fa-flag-checkered" style="color: #4caf50;"></i>
+                    <div>
+                        <strong>Mastery Achievement:</strong> When you can write analytical paragraphs <strong>unconsciously following TETEA</strong>, you've internalized the structure that earns distinction in competitive exams.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button id="prevBtn" onclick="changeSlide(-1)">
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <div style="color: #666; font-weight: bold;">
+                Analytical Paragraph Structure Guide
+            </div>
+            <button id="nextBtn" onclick="changeSlide(1)">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 6;
+        
+        function showSlide(n) {
+            // Hide all slides
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show the current slide
+            document.getElementById(`slide${n}`).classList.add('active');
+            
+            // Update buttons
+            document.getElementById('prevBtn').disabled = n === 1;
+            document.getElementById('nextBtn').disabled = n === totalSlides;
+            
+            // Update progress bar
+            const progressPercentage = ((n - 1) / (totalSlides - 1)) * 100;
+            document.getElementById('progress').style.width = `${progressPercentage}%`;
+            
+            currentSlide = n;
+        }
+        
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 1 && newSlide <= totalSlides) {
+                showSlide(newSlide);
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+        
+        // Initialize first slide
+        showSlide(1);
+    </script>
+</body>
+</html>
